@@ -207,7 +207,7 @@ void bucketSort(vector<int> &arr){
 	}
 	int a=5;
 	int k=(max-min)/a+1;
-	vector<vector<int>> bucket(k);
+	vector<vector<int>> bucket(k);							
 	for(int i=0;i<n;i++){
 		int idx=(arr[i]-min)/a;
 		bucket[idx].push_back(arr[i]);
@@ -237,8 +237,9 @@ void radixSort(vector<int> &arr){
 		vector<int> counta(10,0),countb(10,0);
 		for(int i=0;i<n;i++){
 			int d=arr[i]/exp%10;
+			d=d>=0?d:-d;
 			if(arr[i]<0){
-				counta[-d]++;
+				counta[d]++;
 			}else{
 				countb[d]++;
 			}
@@ -253,9 +254,10 @@ void radixSort(vector<int> &arr){
 		vector<int> res(n);
 		for(int i=n-1;i>=0;i--){
 			int d=arr[i]/exp%10;
+			d=d>=0?d:-d;
 			if(arr[i]<0){
-				res[counta[-d]-1]=arr[i];
-				counta[-d]--;
+				res[counta[d]-1]=arr[i];
+				counta[d]--;
 			}else{
 				res[countb[d]-1]=arr[i];
 				countb[d]--;
