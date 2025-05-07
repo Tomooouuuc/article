@@ -167,103 +167,122 @@ void heapSort(vector<int> &arr){
 	}
 }
 
+void shellSort(vector<int> &arr){
+	int n=arr.size();
+	for(int k=n/2;k>0;k/=2){
+		for(int i=k;i<n;i++){
+			for(int j=i;j>=k&&arr[j]<arr[j-k];j-=k){
+				swap(arr[j],arr[j-k]);
+			}
+		}
+	}
+}
+
 void countSort(vector<int> &arr){
 	int n=arr.size();
-	int min=arr[0],max=arr[0];
-	for(int i=0;i<n;i++){
-		if(arr[i]>max){
-			max=arr[i];
-		}
-		if(arr[i]<min){
-			min=arr[i];
-		}
+	int maxn=arr[0],minn=arr[0];
+	for(int num:arr){
+		maxn=(num>maxn)?num:maxn;
+		minn=(num<minn)?num:minn;
 	}
-	vector<int> count(max-min+1,0);
-	for(int i=0;i<n;i++){
-		count[arr[i]-min]++;
+	vector<int> count(maxn-minn+1,0);
+	for(int num:arr){
+		count[num-minn]++;
 	}
-	for(int i=0;i<max-min;i++){
+	for(int i=0;i<maxn-minn;i++){
 		count[i+1]+=count[i];
 	}
 	vector<int> res(n);
 	for(int i=n-1;i>=0;i--){
 		int num=arr[i];
-		res[count[num-min]-1]=num;
-		count[num-min]--;
+		res[count[num-minn]-1]=num;
+		count[num-minn]--;
 	}
 	arr=res;
 }
 
 void bucketSort(vector<int> &arr){
-	int n=arr.size();
-	int max=arr[0],min=arr[0];
-	for(int i=0;i<n;i++){
-		if(arr[i]>max){
-			max=arr[i];
-		}
-		if(arr[i]<min){
-			min=arr[i];
-		}
+	int maxn=arr[0],minn=arr[0];
+	for(int num:arr){
+		maxn=(num>maxn)?num:maxn;
+		minn=(num<minn)?num:minn;
 	}
-	int a=5;
-	int k=(max-min)/a+1;
-	vector<vector<int>> bucket(k);							
-	for(int i=0;i<n;i++){
-		int idx=(arr[i]-min)/a;
-		bucket[idx].push_back(arr[i]);
+	int size=5;
+	int count=(maxn-minn)/size+1;
+	vector<vector<int>> bucket(count);
+	for(int num:arr){
+		bucket[(num-minn)/size].push_back(num);
 	}
-	for(int i=0;i<k;i++){
-//		sort(bucket[i].begin(),bucket[i].end());
-		bubbleSort(bucket[i]);
+	for(int i=0;i<count;i++){
+		sort(bucket[i].begin(),bucket[i].end());
 	}
-	int m=0;
-	for(int i=0;i<k;i++){
-		for(size_t j=0;j<bucket[i].size();j++){
-			arr[m++]=bucket[i][j];
+	int k=0;
+	for(int i=0;i<count;i++){
+		for(int num:bucket[i]){
+			arr[k++]=num;
 		}
 	}
 }
 
 void radixSort(vector<int> &arr){
 	int n=arr.size();
-	int max=arr[0];
-	for(int i=0;i<n;i++){
-		int cur=arr[i]>=0?arr[i]:-arr[i];
-		if(cur>max){
-			max=cur;
-		}
+	int maxn=arr[0];
+	for(int num:arr){
+		maxn=(num>maxn)?num:maxn;
 	}
-	for(int exp=1;exp<=max;exp*=10){
-		vector<int> counta(10,0),countb(10,0);
-		for(int i=0;i<n;i++){
-			int d=arr[i]/exp%10;
-			d=d>=0?d:-d;
-			if(arr[i]<0){
-				counta[d]++;
-			}else{
-				countb[d]++;
-			}
+	for(int k=1;k<=maxn;k*=10){
+		vector<int> count(10,0);
+		for(int num:arr){
+			int d=num/k%10;
+			count[d]++;
 		}
-		for(int i=9;i>0;i--){
-			counta[i-1]+=counta[i];
-		}
-		countb[0]+=counta[0];
 		for(int i=0;i<9;i++){
-			countb[i+1]+=countb[i];
+			count[i+1]+=count[i];
 		}
 		vector<int> res(n);
 		for(int i=n-1;i>=0;i--){
-			int d=arr[i]/exp%10;
-			d=d>=0?d:-d;
-			if(arr[i]<0){
-				res[counta[d]-1]=arr[i];
-				counta[d]--;
-			}else{
-				res[countb[d]-1]=arr[i];
-				countb[d]--;
-			}
+			int d=arr[i]/k%10;
+			res[count[d]-1]=arr[i];
+			count[d]--;
 		}
 		arr=res;
+	}
+}
+
+void radixSort1(vector<int> &arr){
+	int n=arr.size();
+	int minn=arr[0],offset=0;
+	for(int num:arr){
+		minn=(num<minn)?num:minn;
+	}
+	if(minn<0){
+		offset=-minn;
+	}
+	for(int i=0;i<n;i++){
+		arr[i]=arr[i]+offset;
+	}
+	int maxn=arr[0];
+	for(int num:arr){
+		maxn=(num>maxn)?num:maxn;
+	}
+	for(int k=1;k<=maxn;k*=10){
+		vector<int> count(10,0);
+		for(int num:arr){
+			count[num/k%10]++;
+		}
+		for(int i=0;i<9;i++){
+			count[i+1]+=count[i];
+		}
+		vector<int> res(n);
+		for(int i=n-1;i>=0;i--){
+			int d=arr[i]/k%10;
+			res[count[d]-1]=arr[i];
+			count[d]--;
+		}
+		arr=res;
+	}
+	for(int i=0;i<n;i++){
+		arr[i]=arr[i]-offset;
 	}
 }
 
