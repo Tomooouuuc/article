@@ -17,6 +17,11 @@ public:
 			insert_tail(x);
 		}
 	}
+	List(vector<int> arr):size(0),head(nullptr){
+		for(int x:arr){
+			insert_tail(x);
+		}
+	}
 	void insert_head(int x){
 		Node *newNode=new Node{x,head};
 		head=newNode;
@@ -94,7 +99,8 @@ public:
 };
 
 int main(){
-	List l1={1,2,3,4,5};
+	vector<int> arr{1,2,3,4,5,6,7};
+	List l1=arr;
 	l1.print();
 	cout<<l1.get_size()<<endl;
 	return 0;
