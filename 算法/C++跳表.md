@@ -66,7 +66,7 @@ public:
 		}
 		Node *cur = head;
 		Node *del;
-		for (int i = max_level - 1; i >= 0; i--) {
+		for (int i = skip_level - 1; i >= 0; i--) {
 			while (cur->next[i] && cur->next[i]->val < val) {
 				cur=cur->next[i];
 			}
