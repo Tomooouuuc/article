@@ -40,10 +40,10 @@ public:
 		}
 		delete head;
 	}
-	void insert_node(int val) {
+	bool insert_node(int val) {
 		if(search_node(val)){
 			cout << val << "已经存在" << endl;
-			return;
+			return false;
 		}
 		int level = random_int();
 		Node *newNode = new Node(val, level);
@@ -58,11 +58,12 @@ public:
 		}
 		skip_level=max(skip_level,level);
 		size++;
+		return true;
 	}
-	void delete_node(int val) {
+	bool delete_node(int val) {
 		if(!search_node(val)){
 			cout << val << "删除失败" << endl;
-			return;
+			return false;
 		}
 		Node *cur = head;
 		Node *del;
@@ -77,6 +78,39 @@ public:
 		}
 		delete del;
 		size--;
+		return true;
+	}
+	bool pop_front(){
+		if(size==0){
+			return false;
+		}
+		Node *cur=head;
+		Node *del=head->next[0];
+		for(int i=del->level-1;i>=0;i--){
+			cur->next[i]=cur->next[i]->next[i];
+		}
+		delete del;
+		size--;
+		return true;
+	}
+	bool pop_back(){
+		if(size==0){
+			return false;
+		}
+		Node *cur=head;
+		Node *del;
+		for(int i=skip_level-1;i>=0;i--){
+			while (cur->next[i] && cur->next[i]->next[i]) {
+				cur=cur->next[i];
+			}
+			if(cur->next[i]){
+				del=cur->next[i];
+				cur->next[i]=cur->next[i]->next[i];
+			}
+		}
+		delete del;
+		size--;
+		return true;
 	}
 	bool search_node(int val){
 		Node *cur=head;
@@ -124,12 +158,13 @@ int main() {
 	cout<<s->get_level()<<endl;
 	s->print();
 	s->delete_node(100);
+	s->pop_back();
+	s->pop_front();
 	s->print();
 	cout<<((s->search_node(INT_MIN))?"找到了":"没找到")<<endl;
 	delete s;
 	cout<<"删除成功"<<endl;
 }
-
 
 ```
 
