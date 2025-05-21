@@ -86,7 +86,7 @@ public:
 		delete del;
 		--cnt;
 	}
-	Node& get(int index){
+	int get(int index){
 		if(index<1||index>cnt){
 			throw std::invalid_argument("位置越界");
 		}
@@ -94,7 +94,7 @@ public:
 		for(int i=1;i<index;i++){
 			tmp=tmp->next;
 		}
-		return *tmp;
+		return tmp->num;
 	}
 	int size(){
 		return cnt;
