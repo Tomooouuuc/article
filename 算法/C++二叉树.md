@@ -29,6 +29,12 @@ class Tree{
 		h_post_order(node->right);
 		cout << node->num << " ";
 	}
+	void destroy(Node *node) {
+		if (node == nullptr) return;
+		destroy(node->left);
+		destroy(node->right);
+		delete node;
+	}
 public:
 	Tree():head(nullptr){}
 	Tree(vector<int> arr){
@@ -47,6 +53,9 @@ public:
 				q.push(tmp->right);
 			}
 		}
+	}
+	~Tree(){
+		destroy(head);
 	}
 	void order() {
 		queue<Node*> q;
@@ -82,4 +91,3 @@ int main(){
 	return 0;
 }
 ```
-
