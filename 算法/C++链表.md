@@ -8,30 +8,38 @@ struct Node{
 };
 
 class List{
-	int size;
+	int cnt;
 	Node *head;
 public:
-	List():size(0),head(nullptr){}
-	List(initializer_list<int> lst):size(0),head(nullptr){
+	List():cnt(0),head(nullptr){}
+	List(initializer_list<int> lst):cnt(0),head(nullptr){
 		for(int x:lst){
 			insert_tail(x);
 		}
 	}
-	List(vector<int> arr):size(0),head(nullptr){
+	List(vector<int> arr):cnt(0),head(nullptr){
 		for(int x:arr){
 			insert_tail(x);
+		}
+	}
+	~List(){
+		Node *cur=head;
+		while(cur){
+			Node *tmp=cur;
+			cur=cur->next;
+			delete tmp;
 		}
 	}
 	void insert_head(int x){
 		Node *newNode=new Node{x,head};
 		head=newNode;
-		size++;
+		++cnt;
 	}
 	void insert_tail(int x){
 		Node *newNode=new Node{x,nullptr};
 		if(!head){
 			head=newNode;
-			size++;
+			++cnt;
 			return;
 		}
 		Node *pre=head;
@@ -39,71 +47,74 @@ public:
 			pre=pre->next;
 		}
 		pre->next=newNode;
-		size++;
+		++cnt;
 	}
-	void insert_node(int x,int n){
-		if(n<1||n>size+1){
+	void insert_node(int x,int index){
+		if(index<1||index>cnt+1){
 			throw invalid_argument("插入位置越界");
 		}
-		if(n==1){
+		if(index==1){
 			insert_head(x);
 			return;
 		}
 		Node *newNode=new Node{x,nullptr};
 		Node *pre=head;
-		for(int i=1;i<n-1;i++){
+		for(int i=1;i<index-1;i++){
 			pre=pre->next;
 		}
 		newNode->next=pre->next;
 		pre->next=newNode;
-		size++;
+		++cnt;
 	}
-	void delete_node(int n){
-		if(n<1||n>size){
+	void delete_node(int index){
+		if(index<1||index>cnt){
 			throw std::invalid_argument("删除位置越界");
 		}
-		if(n==1){
+		if(index==1){
 			Node *del=head;
 			head=head->next;
 			delete del;
-			size--;
+			--cnt;
 			return;
 		}
 		Node *pre=head;
-		for(int i=1;i<n-1;i++){
+		for(int i=1;i<index-1;i++){
 			pre=pre->next;
 		}
 		Node *del=pre->next;
 		pre->next=pre->next->next;
 		delete del;
-		size--;
+		--cnt;
 	}
-	Node& get_node(int n){
+	Node& get(int index){
+		if(index<1||index>cnt){
+			throw std::invalid_argument("位置越界");
+		}
 		Node *tmp=head;
-		for(int i=1;i<n;i++){
+		for(int i=1;i<index;i++){
 			tmp=tmp->next;
 		}
 		return *tmp;
 	}
-	int get_size(){
-		return size;
+	int size(){
+		return cnt;
 	}
-	void print(){
-		Node *tmp=head;
+	friend ostream& operator<<(ostream& os,const List& lst){
+		Node *tmp=lst.head;
 		while(tmp){
-			cout<<tmp->num<<" ";
+			os<<tmp->num<<"-->";
 			tmp=tmp->next;
 		}
-		cout<<endl;
+		os<<"NULL"<<endl;
+		return os;
 	}
 };
 
 int main(){
-	vector<int> arr{1,2,3,4,5,6,7};
-	List l1=arr;
-	l1.print();
-	cout<<l1.get_size()<<endl;
+	List l1;
+	
 	return 0;
 }
+
 ```
 
