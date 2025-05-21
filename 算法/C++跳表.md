@@ -45,8 +45,8 @@ public:
 			delete del;
 		}
 	}
-	void insert_node(int val){
-		int level=random_level();
+	void insert_node(int val,int level){
+//		int level=random_level();
 		Node *node=new Node(val,level);
 		Node *cur=head;
 		for(int i=level-1;i>=0;i--){
@@ -99,6 +99,26 @@ public:
 				cur->next[i]=tmp_del;
 			}
 		}
+		skip_level=get_skip_level();
+	}
+	void delete_idx(int index){
+		if(index<0||index>=cnt){
+			return;
+		}
+		Node *del=head,*cur=head;
+		for(int i=0;i<=index;i++){
+			del=del->next[0];
+		}
+		for(int i=del->level-1;i>=0;i--){
+			while(cur->next[i]&&cur->next[i]!=del){
+				cur=cur->next[i];
+			}
+			if(cur->next[i]&&cur->next[i]==del){
+				cur->next[i]=del->next[i];
+			}
+		}
+		delete del;
+		--cnt;
 		skip_level=get_skip_level();
 	}
 	void pop_back(){
@@ -192,16 +212,14 @@ public:
 };
 
 int main(){
-	Skiplist s(3,0.6);
-	s.insert_node(4);
-	s.insert_node(1);
-	s.insert_node(7);
-	s.insert_node(3);
-	s.insert_node(9);
+	Skiplist s;
+	s.insert_node(4,4);
+	s.insert_node(4,2);
+	s.insert_node(4,1);
+	s.insert_node(4,1);
+	s.insert_node(4,4);
 	cout<<s<<endl;
-	s.pop_back();
-	cout<<s<<endl;
-	s.pop_back();
+	s.delete_idx(3);
 	cout<<s<<endl;
 }
 
