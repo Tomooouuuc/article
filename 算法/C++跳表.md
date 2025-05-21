@@ -45,8 +45,8 @@ public:
 			delete del;
 		}
 	}
-	void insert_node(int val,int level){
-//		int level=random_level();
+	void insert_node(int val){
+		int level=random_level();
 		Node *node=new Node(val,level);
 		Node *cur=head;
 		for(int i=level-1;i>=0;i--){
@@ -213,15 +213,14 @@ public:
 
 int main(){
 	Skiplist s;
-	s.insert_node(4,4);
-	s.insert_node(4,2);
-	s.insert_node(4,1);
-	s.insert_node(4,1);
-	s.insert_node(4,4);
+	s.insert_node(4);
+	s.insert_node(4);
+	s.insert_node(4);
+	s.insert_node(4);
+	s.insert_node(4);
 	cout<<s<<endl;
 	s.delete_idx(3);
 	cout<<s<<endl;
 }
-
 ```
 
